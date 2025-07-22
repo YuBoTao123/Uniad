@@ -162,3 +162,6 @@ We are thrilled to launch our recent line of works: [GenAD](https://arxiv.org/ab
 <img src="sources/vista.gif" width="1000px" >
 </p>
 </div>
+
+需要激活对应的conda bevformer，加载动态库
+export LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.28
