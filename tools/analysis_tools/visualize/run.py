@@ -13,6 +13,8 @@ from nuscenes.utils.geometry_utils import view_points, box_in_image, BoxVisibili
 from nuscenes.utils.data_classes import LidarPointCloud, Box
 from nuscenes.utils import splits
 from pyquaternion import Quaternion
+import sys
+sys.path.insert(0, '/Uniad')
 from projects.mmdet3d_plugin.datasets.nuscenes_e2e_dataset import obtain_map_info
 from projects.mmdet3d_plugin.datasets.eval_utils.map_api import NuScenesMap
 from PIL import Image
@@ -74,7 +76,9 @@ class Visualizer:
     def _parse_predictions_multitask_pkl(self, predroot):
 
         outputs = mmcv.load(predroot)
-        outputs = outputs['bbox_results']
+        print("out is ssss", outputs)
+        # outputs = outputs['bbox_results']
+        print("out is donw")
         prediction_dict = dict()
         for k in range(len(outputs)):
             token = outputs[k]['token']
@@ -195,7 +199,8 @@ class Visualizer:
                     track_dims[0],
                     track_yaw[0],
                     track_velocity[0],
-                    outputs[k]['planning_traj'][0].cpu().detach().numpy(),
+                    # outputs[k]['planning_traj'][0].cpu().detach().numpy(), https://blog.csdn.net/weixin_43938638/article/details/144159845
+                    outputs[k]['planning']['result_planning']['sdc_traj'][0].cpu().detach().numpy(),
                     1,
                     pred_track_id=-1,
                     pred_occ_map=None,
@@ -290,7 +295,7 @@ def main(args):
         with_pred_traj=True,
         show_gt_boxes=False,
         show_lidar=False,
-        show_command=True,
+        show_command=False,
         show_hd_map=False,
         show_sdc_car=True,
         show_legend=True,

@@ -88,7 +88,7 @@ def parse_args():
     parser.add_argument(
         '--launcher',
         choices=['none', 'pytorch', 'slurm', 'mpi'],
-        default='pytorch',
+        default='none',
         help='job launcher')
     parser.add_argument('--local_rank', type=int, default=0)
     args = parser.parse_args()
@@ -181,7 +181,7 @@ def main():
     else:
         distributed = True
         init_dist(args.launcher, **cfg.dist_params)
-
+    distributed = False
     # set random seeds
     if args.seed is not None:
         set_random_seed(args.seed, deterministic=args.deterministic)
@@ -220,9 +220,9 @@ def main():
         model.PALETTE = dataset.PALETTE
 
     if not distributed:
-        assert False
-        # model = MMDataParallel(model, device_ids=[0])
-        # outputs = single_gpu_test(model, data_loader, args.show, args.show_dir)
+        # assert False
+        model = MMDataParallel(model, device_ids=[0])
+        outputs = single_gpu_test(model, data_loader, args.show, args.show_dir)
     else:
         model = MMDistributedDataParallel(
             model.cuda(),

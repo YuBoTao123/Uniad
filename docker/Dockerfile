@@ -114,16 +114,20 @@ RUN python -m pip install opencv-python==4.5.5.62
 
 ENV MMCV_WITH_OPS=1 
 ENV MMCV_CUDA_ARGS=-std=c++17
-RUN git clone --branch v1.6.0 --single-branch https://github.com/open-mmlab/mmcv.git
-WORKDIR /mmcv
-RUN pip install -v -e .
+ENV CXXFLAGS='-std=c++17'
+ENV _GLIBCXX_USE_CXX11_ABI=1
+# 40x系列需要下面的参数
+ENV TORCH_CUDA_ARCH_LIST="8.9"
+# RUN git clone --branch v1.6.0 --single-branch https://github.com/open-mmlab/mmcv.git
+# WORKDIR /mmcv
+# RUN pip install -v -e .
+RUN pip install mmcv-full==1.6.0 -f https://download.openmmlab.com/mmcv/dist/cu118/torch2.0/index.html
 RUN pip install mmdet==2.26.0 mmsegmentation==0.29.1 mmdet3d==1.0.0rc6
 
 # install other dependencies
 COPY . /UniAD
 WORKDIR /UniAD
 RUN pip install -r requirements.txt
-
 WORKDIR /UniAD
 USER root
 RUN ["/bin/bash"]
